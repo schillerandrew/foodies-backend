@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 
 const newUser = new mongoose.Schema({
-  Email: {type: String},
-  Yelpdata: {type: Array},
+  Email: {type: String, req: true},
+  YelpData: {type: Array},
   Reviews: {type: Array },
   TopPick: {type: String}
 });
