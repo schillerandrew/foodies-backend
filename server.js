@@ -14,6 +14,9 @@ const getYelp = require('./models/yelp.js');
 mongoose.connect(process.env.DB_URL);
 const getLocation = require('./models/location');
 const UserData = require('./models/UserData')
+const verifyUser = require('./autho');
+
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -31,13 +34,31 @@ app.get('/yelp', getYelp);
 
 
 async function getUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    if (err) {
+      console.error(err);
+      res.send('invalid token');
+    } else {
+      let queryObject = {}
+      if (req.query.email){
+        queryObject.email = req.query.email;
+      }
+    }  
   try {
-    let queryObject = {}
-    let results = await UserData.find(queryObject);
-    res.status(200).send(results);
-  } catch(err) {
-    next(err);
-  }
+    // let queryObject = {}
+    let userDataFromDb = await UserData.find(queryObject);
+    // let results = await UserData.find(queryObject);
+    // res.status(200).send(results);
+    if (userDataFromDb.length > 0) {
+      res.status(200).send(userDataFromDb);
+    } else {
+      res.status(404).send('error');
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('server error');
+   }
+  });
 }
 
 async function postUserData (req, res, next) {
