@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 const newFoods = new mongoose.Schema({
   Yelpdata: {type: Object, req : true},
-  Review: {type: Array },
+  Reviews: {type: Array },
+  TopPick: {type: String}
 });
 
 const foodModel = mongoose.model('food', newFoods);
