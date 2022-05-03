@@ -32,34 +32,43 @@ app.delete('/userData/:id', deleteUserData);
 app.put('/userData/:id',updateUserData);
 app.get('/yelp', getYelp);
 
-
 async function getUserData(req, res, next) {
-  verifyUser(req, async (err, user) => {
-    if (err) {
-      console.error(err);
-      res.send('invalid token');
-    } else {
-      let queryObject = {}
-      if (req.query.email){
-        queryObject.email = req.query.email;
-      }
-    }  
   try {
-    // let queryObject = {}
-    let userDataFromDb = await UserData.find(queryObject);
-    // let results = await UserData.find(queryObject);
-    // res.status(200).send(results);
-    if (userDataFromDb.length > 0) {
-      res.status(200).send(userDataFromDb);
-    } else {
-      res.status(404).send('error');
-    }
-  } catch (e) {
-    console.error(e);
-    res.status(500).send('server error');
-   }
-  });
+    console.log(req.query.email);
+    let queryObject = {}
+    let results = await UserData.find(req.query.email);
+    res.status(200).send(results);
+  } catch(err) {
+    next(err);
+  }
 }
+// async function getUserData(req, res, next) {
+//   verifyUser(req, async (err, user) => {
+//     if (err) {
+//       console.error(err);
+//       res.send('invalid token');
+//     } else {
+//       let queryObject = {}
+//       if (req.query.email){
+//         queryObject.email = req.query.email;
+//       }
+//     }  
+//   try {
+//     // let queryObject = {}
+//     let userDataFromDb = await UserData.find(queryObject);
+//     // let results = await UserData.find(queryObject);
+//     // res.status(200).send(results);
+//     if (userDataFromDb.length > 0) {
+//       res.status(200).send(userDataFromDb);
+//     } else {
+//       res.status(404).send('error');
+//     }
+//   } catch (e) {
+//     console.error(e);
+//     res.status(500).send('server error');
+//    }
+//   });
+// }
 
 async function postUserData (req, res, next) {
   console.log(req.body);
