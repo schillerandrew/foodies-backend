@@ -42,9 +42,10 @@ async function getUserData(req, res, next) {
       } else {
         let queryObject = {}
         if (req.query.email) {
-          queryObject.email = req.query.email;
+          queryObject.Email = req.query.email;
         }
         let results = await UserData.find(queryObject);
+        console.log(results);
         if (results.length > 0) {
           res.status(200).send(results);
         } else {
@@ -59,10 +60,8 @@ async function getUserData(req, res, next) {
 }
 
 async function postUserData(req, res, next) {
-  console.log(req.body);
   verifyUser(req, async (err, user) => {
     try {
-      console.log(req.body)
       if (err) {
         console.error(err);
         res.send('invalid token');
@@ -99,6 +98,7 @@ async function updateUserData(req, res, next) {
         console.error(err);
         res.send('invalid token');
       } else {
+        console.log('here');
         const updatedUserData = await UserData.findByIdAndUpdate(req.params.id, req.body, { new: true, overwrite: true });
         res.send(updatedUserData);
       }
