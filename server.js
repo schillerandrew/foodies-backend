@@ -1,6 +1,6 @@
 'use strict';
 
-//Consts for backend
+//Const for backend
 
 require('dotenv').config();
 const express = require('express');
@@ -29,71 +29,84 @@ app.get('/location', getLocation);
 app.get('/userData', getUserData);
 app.post('/userData', postUserData);
 app.delete('/userData/:id', deleteUserData);
-app.put('/userData/:id',updateUserData);
+app.put('/userData/:id', updateUserData);
 app.get('/yelp', getYelp);
 
+
 async function getUserData(req, res, next) {
-  try {
-    console.log(req.query.email);
-    let queryObject = {}
-    let results = await UserData.find(req.query.email);
-    res.status(200).send(results);
-  } catch(err) {
-    next(err);
-  }
+  verifyUser(req, async (err, user) => {
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        let queryObject = {}
+        if (req.query.email) {
+          queryObject.email = req.query.email;
+        }
+        let results = await UserData.find(queryObject);
+        if (results.length > 0) {
+          res.status(200).send(results);
+        } else {
+          res.status(200).send([]);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      res.status(500).send('server error');
+    }
+  });
 }
-// async function getUserData(req, res, next) {
-//   verifyUser(req, async (err, user) => {
-//     if (err) {
-//       console.error(err);
-//       res.send('invalid token');
-//     } else {
-//       let queryObject = {}
-//       if (req.query.email){
-//         queryObject.email = req.query.email;
-//       }
-//     }  
-//   try {
-//     // let queryObject = {}
-//     let userDataFromDb = await UserData.find(queryObject);
-//     // let results = await UserData.find(queryObject);
-//     // res.status(200).send(results);
-//     if (userDataFromDb.length > 0) {
-//       res.status(200).send(userDataFromDb);
-//     } else {
-//       res.status(404).send('error');
-//     }
-//   } catch (e) {
-//     console.error(e);
-//     res.status(500).send('server error');
-//    }
-//   });
-// }
 
-async function postUserData (req, res, next) {
+async function postUserData(req, res, next) {
   console.log(req.body);
-  try {
-    let createdUserData = await UserData.create(req.body);
-    res.status(200).send(createdUserData);
-  } catch(err) {
-    next(err);
-  }
+  verifyUser(req, async (err, user) => {
+    try {
+      console.log(req.body)
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        let createdUserData = await UserData.create(req.body);
+        res.status(200).send(createdUserData);
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 }
 
-async function deleteUserData (req, res, next) {
-  let id = req.params.id;
-  console.log(id)
-  try {
-    await UserData.findByIdAndDelete(id);
-    res.status(200).send('Deleted');
-  } catch(err) {
-    next(err);
-  }
+async function deleteUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    let id = req.params.id;
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        await UserData.findByIdAndDelete(id);
+        res.status(200).send('Deleted');
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 }
-async function updateUserData (req, res) {
-  const updatedUserData = await UserData.findByIdAndUpdate(req.params.id, req.body, { new: true, overwrite: true });
-  res.send(updatedUserData);
-};
+async function updateUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        const updatedUserData = await UserData.findByIdAndUpdate(req.params.id, req.body, { new: true, overwrite: true });
+        res.send(updatedUserData);
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+}
 
 app.get('*', (req, res) => {
   res.status(404).send('Not available');
