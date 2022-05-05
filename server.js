@@ -1,6 +1,6 @@
 'use strict';
 
-//Consts for backend
+//Const for backend
 
 require('dotenv').config();
 const express = require('express');
@@ -13,6 +13,10 @@ const mongoose = require('mongoose');
 const getYelp = require('./models/yelp.js');
 mongoose.connect(process.env.DB_URL);
 const getLocation = require('./models/location');
+const UserData = require('./models/UserData')
+const verifyUser = require('./autho');
+
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -22,47 +26,87 @@ db.once('open', function () {
 //Routes
 
 app.get('/location', getLocation);
-app.get('/foods', getFoods);
-app.post('/foods', postFoods);
-app.delete('/foods/:id', deleteFoods);
-app.put('/foods/:id',updateFoods);
+app.get('/userData', getUserData);
+app.post('/userData', postUserData);
+app.delete('/userData/:id', deleteUserData);
+app.put('/userData/:id', updateUserData);
 app.get('/yelp', getYelp);
 
 
-async function getFoods(req, res, next) {
-  try {
-    let queryObject = {}
-    let results = await Foods.find(queryObject);
-    res.status(200).send(results);
-  } catch(err) {
-    next(err);
-  }
+async function getUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        let queryObject = {}
+        if (req.query.email) {
+          queryObject.Email = req.query.email;
+        }
+        let results = await UserData.find(queryObject);
+        console.log(results);
+        if (results.length > 0) {
+          res.status(200).send(results);
+        } else {
+          res.status(200).send([]);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      res.status(500).send('server error');
+    }
+  });
 }
 
-async function postFoods (req, res, next) {
-  console.log(req.body);
-  try {
-    let createdFoods = await Foods.create(req.body);
-    res.status(200).send(createdFoods);
-  } catch(err) {
-    next(err);
-  }
+async function postUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        let createdUserData = await UserData.create(req.body);
+        res.status(200).send(createdUserData);
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 }
 
-async function deleteFoods (req, res, next) {
-  let id = req.params.id;
-  console.log(id)
-  try {
-    await Foods.findByIdAndDelete(id);
-    res.status(200).send('Food Removed');
-  } catch(err) {
-    next(err);
-  }
+async function deleteUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    let id = req.params.id;
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        await UserData.findByIdAndDelete(id);
+        res.status(200).send('Deleted');
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 }
-async function updateFoods (req, res) {
-  const updatedFoods = await Foods.findByIdAndUpdate(req.params.id, req.body, { new: true, overwrite: true });
-  res.send(updatedFoods);
-};
+async function updateUserData(req, res, next) {
+  verifyUser(req, async (err, user) => {
+    try {
+      if (err) {
+        console.error(err);
+        res.send('invalid token');
+      } else {
+        console.log('here');
+        const updatedUserData = await UserData.findByIdAndUpdate(req.params.id, req.body, { new: true, overwrite: true });
+        res.send(updatedUserData);
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+}
 
 app.get('*', (req, res) => {
   res.status(404).send('Not available');

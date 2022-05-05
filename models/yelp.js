@@ -10,6 +10,7 @@ class Yelp {
     this.price = dataset.price;
     this.rating = dataset.rating;
     this.url = dataset.url;
+    this.location = dataset.location;
   }
 }
 
@@ -17,6 +18,7 @@ async function getYelp(req, res, next) {
   try {
     let locationLat = req.query.lat;
     let locationLon = req.query.lon;
+    console.log(locationLat, locationLon);
     let yelpURL = `https://api.yelp.com/v3/businesses/search?term=food&latitude=${locationLat}&longitude=${locationLon}`;
     let key = 'restaurants-' + locationLat + locationLon;
     if (cache[key] && (Date.now() - cache[key].timestamp < 300)) {
