@@ -29,5 +29,8 @@
     "jwks-rsa": "^2.1.0",
     "mongoose": "^6.3.2",
     "nodemon": "^2.0.16"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13"
   }
 }
