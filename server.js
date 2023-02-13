@@ -13,6 +13,17 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// adds Access Control Allow Origin headers
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 const PORT = process.env.PORT || 3001;
 const mongoose = require('mongoose');
 const getYelp = require('./models/yelp.js');
