@@ -7,11 +7,11 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-const corsOptions = {
-  origin: "https://foodies-schiller.cyclic.app",
-}
+// const corsOptions = {
+//   origin: "https://foodies-schiller.cyclic.app",
+// }
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 const PORT = process.env.PORT || 3001;
 const mongoose = require('mongoose');
