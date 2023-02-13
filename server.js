@@ -8,7 +8,7 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-  origin: "https://foodies-schiller.netlify.app",
+  origin: "https://foodies-schiller.netlify.app/",
 }
 
 app.use(cors(corsOptions));
