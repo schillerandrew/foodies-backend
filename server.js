@@ -7,11 +7,12 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// const corsOptions = {
-//   origin: "https://foodies-schiller.netlify.app",
-// }
+const corsOptions = {
+  origin: "https://foodies-schiller.netlify.app",
+  credentials: true
+}
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // adds Access Control Allow Origin headers
