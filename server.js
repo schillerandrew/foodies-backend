@@ -7,12 +7,12 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-const corsOptions = {
-  origin: "https://foodies-schiller.netlify.app",
-  credentials: true
-}
+// const corsOptions = {
+//   origin: "https://foodies-schiller.netlify.app",
+//   credentials: true
+// }
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // adds Access Control Allow Origin headers
@@ -25,10 +25,10 @@ app.use(express.json());
 //   next();
 // });
 
-app.all('/', function(req, res, next) {
+app.use('/', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next()
+  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+  next();
 });
 
 const PORT = process.env.PORT || 3001;
