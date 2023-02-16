@@ -48,12 +48,12 @@ db.once('open', function () {
 
 //Routes
 
-app.get('/api/location', getLocation);
-app.get('/api/userData', getUserData);
-app.post('/api/userData', postUserData);
-app.delete('/api/userData/:id', deleteUserData);
-app.put('/api/userData/:id', updateUserData);
-app.get('/api/yelp', getYelp);
+app.get('/location', getLocation);
+app.get('/userData', getUserData);
+app.post('/userData', postUserData);
+app.delete('/userData/:id', deleteUserData);
+app.put('/userData/:id', updateUserData);
+app.get('/yelp', getYelp);
 
 
 async function getUserData(req, res, next) {
