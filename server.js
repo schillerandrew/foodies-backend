@@ -8,10 +8,9 @@ let cors = require('cors');
 let app = express();
 
 const corsOptions = {
-  origin: 'https://foodies-schiller.netlify.app',
+  origin: '*',
   allowedHeaders: 'Access-Control-Allow-Headers,Authorization,X-API-KEY, Origin,X-Requested-With,Content-Type,Accept, Access-Control-Allow-Request-Method',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
   preflightContinue: true
 };
 
