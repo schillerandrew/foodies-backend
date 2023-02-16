@@ -8,8 +8,9 @@ let cors = require('cors');
 let app = express();
 
 const corsOptions = {
-  origin: '*',
-  allowedHeaders: ['Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method']
+  origin: true,
+  allowedHeaders: 'Access-Control-Allow-Headers,Authorization,X-API-KEY, Origin,X-Requested-With,Content-Type,Accept, Access-Control-Allow-Request-Method',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }
 
 app.use(cors(corsOptions));
