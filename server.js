@@ -10,8 +10,10 @@ let app = express();
 const corsOptions = {
   origin: true,
   allowedHeaders: 'Access-Control-Allow-Headers,Authorization,X-API-KEY, Origin,X-Requested-With,Content-Type,Accept, Access-Control-Allow-Request-Method',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-}
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  preflightContinue: true
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
