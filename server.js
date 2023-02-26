@@ -7,14 +7,14 @@ let express = require('express');
 let cors = require('cors');
 let app = express();
 
-const corsOptions = {
-  origin: '*',
-  allowedHeaders: 'Access-Control-Allow-Headers,Authorization,X-API-KEY, Origin,X-Requested-With,Content-Type,Accept, Access-Control-Allow-Request-Method',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: true
-};
+// const corsOptions = {
+//   origin: '*',
+//   allowedHeaders: 'Access-Control-Allow-Headers,Authorization,X-API-KEY, Origin,X-Requested-With,Content-Type,Accept, Access-Control-Allow-Request-Method',
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   preflightContinue: true
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // adds Access Control Allow Origin headers
