@@ -36,7 +36,17 @@ app.use(express.json());
 const PORT = process.env.PORT || 3001;
 const mongoose = require('mongoose');
 const getYelp = require('./models/yelp.js');
-mongoose.connect(process.env.DB_URL);
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.DB_URL);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+}
+
 const getLocation = require('./models/location');
 const UserData = require('./models/UserData')
 const verifyUser = require('./autho');
@@ -139,11 +149,12 @@ async function updateUserData(req, res, next) {
 
 app.get('*', (req, res) => {
   res.status(404).send('Not available');
-})
+});
 
 app.use((error, req, res, next) => {
   res.status(500).send(error.message);
 });
 
-
-app.listen(PORT, () => console.log(`listening on ${PORT}`));
+connectDB().then(() => {
+  app.listen(PORT, () => console.log(`listening on ${PORT}`));
+});
