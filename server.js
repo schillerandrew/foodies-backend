@@ -50,6 +50,10 @@ db.once('open', function () {
 
 //Routes
 
+app.get('/', (req, res) => {
+  res.status(200).send('Looks good!');
+});
+
 app.get('/location', getLocation);
 app.get('/userData', getUserData);
 app.post('/userData', postUserData);
